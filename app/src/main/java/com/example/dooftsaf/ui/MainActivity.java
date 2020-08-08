@@ -1,11 +1,15 @@
 package com.example.dooftsaf.ui;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.dooftsaf.R;
+import com.example.dooftsaf.ui.service.MainService;
 import com.example.dooftsaf.ui.ui.history.HistoryFragment;
 import com.example.dooftsaf.ui.ui.home.HomeFragment;
 import com.example.dooftsaf.ui.ui.slideshow.SlideshowFragment;
@@ -13,6 +17,8 @@ import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
@@ -31,6 +37,10 @@ public class MainActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+        Intent myIntent = new Intent(MainActivity.this, MainService.class);
+        // Call startService with Intent parameter.
+        this.startService(myIntent);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         final DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);

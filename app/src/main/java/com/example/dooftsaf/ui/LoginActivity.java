@@ -2,8 +2,12 @@ package com.example.dooftsaf.ui;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -23,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     private String password = "";
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private static final int REQUEST_LOCATION_PERMISSION = 100;
 
     public LoginActivity() {
     }
@@ -33,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         txtEmail = findViewById(R.id.txtEmail);
         txtPassword = findViewById(R.id.txtPassword);
+        requestLocationPermissions();
     }
 
     public void onClickLogin(View view){
@@ -44,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
+
                             intoHome();
                         } else {
                             // If sign in fails, display a message to the user.
@@ -60,5 +67,14 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private void requestLocationPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_LOCATION_PERMISSION);
+        }
     }
 }
