@@ -1,51 +1,45 @@
 package com.example.dooftsaf.ui.model;
 
 public class Order {
-    private String ProductId;
-    private String ProductName;
-    private String Quantity;
-    private String Price;
+    private String username;
+    private String address;
+    private String phoneNumber;
+    private String restaurant;
 
-    public Order(){
-
+    public Order() {
     }
 
-    public Order(String productId, String productName, String quantity, String price, String image) {
-        ProductId = productId;
-        ProductName = productName;
-        Quantity = quantity;
-        Price = price;
+    public String getUsername() {
+        return username;
     }
 
-    public String getProductId() {
-        return ProductId;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public void setProductId(String productId) {
-        ProductId = productId;
+    public String getAddress() {
+        return address;
     }
 
-    public String getProductName() {
-        return ProductName;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public void setProductName(String productName) {
-        ProductName = productName;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public String getQuantity() {
-        return Quantity;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
-    public void setQuantity(String quantity) {
-        Quantity = quantity;
+    public String getRestaurant() {
+        return restaurant;
     }
 
-    public String getPrice() {
-        return Price;
+    public void setRestaurant(String restaurant) {
+        this.restaurant = restaurant;
     }
 
-    public void setPrice(String price) {
-        Price = price;
-    }
+
 }

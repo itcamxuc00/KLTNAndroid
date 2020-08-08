@@ -1,4 +1,4 @@
-package com.example.dooftsaf.ui.ui.gallery;
+package com.example.dooftsaf.ui.ui.history;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,15 +15,13 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.dooftsaf.R;
 
 
-public class GalleryFragment extends Fragment {
+public class HistoryFragment extends Fragment {
 
-    private GalleryViewModel galleryViewModel;
+    private HistoryViewModel galleryViewModel;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        galleryViewModel =
-                ViewModelProviders.of(this).get(GalleryViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_gallery, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        galleryViewModel =  ViewModelProviders.of(this).get(HistoryViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_history, container, false);
         final TextView textView = root.findViewById(R.id.text_gallery);
         galleryViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
