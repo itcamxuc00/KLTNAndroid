@@ -17,6 +17,7 @@ import com.example.dooftsaf.ui.adapter.OrdersAdapter;
 import com.example.dooftsaf.ui.model.Order;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -31,6 +32,7 @@ public class HistoryFragment extends Fragment {
 
     private static ArrayList<Order> mArrayList = new ArrayList<>();;
     private FirebaseFirestore mFirebaseFirestore = FirebaseFirestore.getInstance();
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private ListView listView;
     OrdersAdapter adapter;
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,7 +43,7 @@ public class HistoryFragment extends Fragment {
     }
 
     private void getListItems() {
-        mFirebaseFirestore.collection("orders").get()
+        mFirebaseFirestore.collection("orders").whereEqualTo("shipper",mAuth.getCurrentUser().getUid()).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -52,6 +54,7 @@ public class HistoryFragment extends Fragment {
                             // Convert the whole Query Snapshot to a list
                             // of objects directly! No need to fetch each
                             // document.
+                            mArrayList.clear();
                             for (QueryDocumentSnapshot snapshot: queryDocumentSnapshots){
                                 Order order = snapshot.toObject(Order.class);
                                 order.setId(snapshot.getId());

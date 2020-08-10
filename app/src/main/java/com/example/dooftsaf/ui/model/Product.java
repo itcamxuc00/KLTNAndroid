@@ -2,16 +2,26 @@ package com.example.dooftsaf.ui.model;
 
 public class Product {
     private String name;
-    private int price;
-    private int quantity;
+    private String price;
+    private int count;
     private int totalPrice;
 
-    public Product(String name, int price, int quantity) {
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public Product() {
+    }
+
+    public Product(String name, String price, int count) {
         this.name = name;
         this.price = price;
-        this.quantity = quantity;
-        this.totalPrice = price * quantity;
-    }
+        this.count = count;
+}
 
     public String getName() {
         return name;
@@ -22,22 +32,15 @@ public class Product {
     }
 
     public int getTotalPrice() {
-        return totalPrice;
+        return Integer.parseInt(price) * count;
     }
 
-    public int getPrice() {
+    public String getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
 }

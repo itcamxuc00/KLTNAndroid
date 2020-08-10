@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.dooftsaf.R;
+import com.example.dooftsaf.ui.common.Common;
 import com.example.dooftsaf.ui.service.MainService;
 import com.example.dooftsaf.ui.ui.history.HistoryFragment;
 import com.example.dooftsaf.ui.ui.home.HomeFragment;
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
+         setContentView(R.layout.activity_main2);
         Intent myIntent = new Intent(MainActivity.this, MainService.class);
         // Call startService with Intent parameter.
         this.startService(myIntent);
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity  {
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
+        fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, new HistoryFragment()).commit();
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
@@ -54,7 +56,8 @@ public class MainActivity extends AppCompatActivity  {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.nav_home:
-                        fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, new HomeFragment()).commit();
+                        if(Common.curentOrder==null)  fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, new SlideshowFragment()).commit();
+                        else fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, new HomeFragment()).commit();
                         break;
                     case R.id.nav_gallery:
                         fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, new HistoryFragment()).commit();

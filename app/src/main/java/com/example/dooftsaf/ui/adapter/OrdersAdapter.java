@@ -52,8 +52,9 @@ public class OrdersAdapter extends BaseAdapter {
         TextView txtStatus = view.findViewById(R.id.textViewStatus);
 
         Order order = orderList.get(i);
-        txtId.setText(order.getId());
-        txtDate.setText(order.getDate());
+        txtId.setText(order.getId().substring(0,9));
+        String sDate = order.getDate().toString();
+        txtDate.setText(order.getDate().toString());
         txtUsername.setText(order.getUsername());
         txtAddress.setText(order.getAddress());
         txtPhoneNumber.setText(order.getPhoneNumber());

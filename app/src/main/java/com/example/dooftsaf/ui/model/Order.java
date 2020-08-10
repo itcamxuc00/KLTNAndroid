@@ -1,14 +1,54 @@
 package com.example.dooftsaf.ui.model;
 
+import java.util.Date;
+import java.util.List;
+
 public class Order {
 
     private String username;
     private String address;
     private String phoneNumber;
     private String restaurant;
+    private String restaurantName;
+
+    public String getRestaurantName() {
+        return restaurantName;
+    }
+
+    public void setRestaurantName(String restaurantName) {
+        this.restaurantName = restaurantName;
+    }
+
+    private String restaurantAddress;
     private int totalPrice;
-    private String Date;
+    private java.util.Date date;
     private String status;
+    private List<Product> detail;
+
+    public ObjLocation getLocation() {
+        return location;
+    }
+
+    public void setLocation(ObjLocation location) {
+        this.location = location;
+    }
+
+    private ObjLocation location;
+    public String getRestaurantAddress() {
+        return restaurantAddress;
+    }
+
+    public void setRestaurantAddress(String restaurantAddress) {
+        this.restaurantAddress = restaurantAddress;
+    }
+
+    public List<Product> getDetail() {
+        return detail;
+    }
+
+    public void setDetail(List<Product> detail) {
+        this.detail = detail;
+    }
 
     public Order() {
     }
@@ -21,12 +61,12 @@ public class Order {
         this.totalPrice = totalPrice;
     }
 
-    public String getDate() {
-        return Date;
+    public Date getDate() {
+        return date;
     }
 
-    public void setDate(String date) {
-        Date = date;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public String getStatus() {

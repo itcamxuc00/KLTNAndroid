@@ -1,14 +1,12 @@
 package com.example.dooftsaf.ui.service;
 
-import android.Manifest;
 import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
-import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -16,32 +14,45 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat;
 
 import com.example.dooftsaf.R;
-import com.example.dooftsaf.ui.MainActivity;
+import com.example.dooftsaf.ui.common.Common;
+import com.example.dooftsaf.ui.model.ObjLocation;
+import com.example.dooftsaf.ui.model.Order;
+import com.example.dooftsaf.ui.model.User;
 import com.example.dooftsaf.ui.notification.NewOrderNotification;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 public class MainService extends Service  {
     private FirebaseFirestore mFirebaseFirestore = FirebaseFirestore.getInstance();
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private NotificationManagerCompat notificationManagerCompat;
+
+    User user;
+
+    FusedLocationProviderClient fusedLocationProviderClient;
+    LocationCallback locationCallback;
+    LocationRequest locationRequest;
+    Location mLastLocation;
+    int minimumDistanceBetweenUpdates = 60;
 
     public MainService() {
 
@@ -55,13 +66,23 @@ public class MainService extends Service  {
 
     public void onCreate(){
         super.onCreate();
-        Log.d("hahaha",mAuth.getCurrentUser().getUid());
+
+        user = Common.currentUser;
         this.notificationManagerCompat = NotificationManagerCompat.from(this);
 
+        buildLocationRequest();
+        buildLocationCallBack();
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
+            return;
+        }
+
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
     }
 
     public int onStartCommand(Intent intent, int flags, int startId){
+
         mFirebaseFirestore.collection("orders").whereEqualTo("shipper",mAuth.getCurrentUser().getUid())
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
@@ -71,10 +92,28 @@ public class MainService extends Service  {
                             Log.w("err", "Listen failed.", e);
                             return;
                         }
-
                         for (QueryDocumentSnapshot doc : value) {
-                            if (doc.get("username") != null) {
-                                sendOnChannel1(doc.getString("username"));
+                            if (doc.getString("status").equals("Đang giao hàng")) {
+                                Common.curentOrder = doc.toObject(Order.class);
+                                Common.curentOrder.setId(doc.getId());
+                                mFirebaseFirestore.collection("restaurants").document(doc.getString("restaurant"))
+                                        .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            DocumentSnapshot document = task.getResult();
+                                            if (document.exists()) {
+                                                Common.curentOrder.setRestaurantName(document.getString("name"));
+                                                Common.curentOrder.setRestaurantAddress(document.getString("address"));
+                                                sendOnChannel1(document.getString("name"));
+                                            } else {
+                                                Log.e("errr", "No such document");
+                                            }
+                                        } else {
+                                            Log.e("errrr", "get failed with ", task.getException());
+                                        }
+                                    }
+                                });
                             }
                         }
                     }
@@ -97,4 +136,24 @@ public class MainService extends Service  {
     }
 
 
+    private void buildLocationCallBack() {
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                mLastLocation = locationResult.getLastLocation();
+                Common.mLocation = mLastLocation;
+                user.setLocation(new ObjLocation(mLastLocation.getLatitude(),mLastLocation.getLongitude()));
+                mFirebaseFirestore.collection("users").document(mAuth.getCurrentUser().getUid())
+                        .set(user);
+            }
+        };
+    }
+
+    private void buildLocationRequest() {
+        locationRequest = new LocationRequest();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setSmallestDisplacement(10f);
+        locationRequest.setInterval(180*1000);
+        locationRequest.setFastestInterval(90 * 1000);
+    }
 }

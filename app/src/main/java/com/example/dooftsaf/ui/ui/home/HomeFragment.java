@@ -1,34 +1,57 @@
 package com.example.dooftsaf.ui.ui.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
+
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+
 
 import com.example.dooftsaf.R;
+import com.example.dooftsaf.ui.LoginActivity;
+import com.example.dooftsaf.ui.MainActivity;
+import com.example.dooftsaf.ui.MapActivity;
+import com.example.dooftsaf.ui.adapter.DetailOrderAdapter;
+import com.example.dooftsaf.ui.common.Common;
 
 
 public class HomeFragment extends Fragment {
 
-    private HomeViewModel homeViewModel;
-
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                ViewModelProviders.of(this).get(HomeViewModel.class);
+    public View onCreateView(@NonNull LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
-        final TextView textView = root.findViewById(R.id.text_home);
-        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        TextView txtId = root.findViewById(R.id.txtOrder);
+        TextView txtResName = root.findViewById(R.id.textViewRestaurant);;
+        TextView txtResAdress = root.findViewById(R.id.textViewResAddress);
+        TextView txtUsername = root.findViewById(R.id.textViewCsName);
+        TextView txtUserPhone = root.findViewById(R.id.textViewCsPhone);
+        TextView txtUserAddress = root.findViewById(R.id.textViewCsAdress);
+        ListView lsvDetail = root.findViewById(R.id.lsvDetail);
+
+        if(Common.curentOrder != null){
+            txtId.setText(Common.curentOrder.getId());
+            txtResAdress.setText(Common.curentOrder.getRestaurantAddress());
+            txtResName.setText(Common.curentOrder.getRestaurantName());
+            txtUsername.setText(Common.curentOrder.getUsername());
+            txtUserAddress.setText(Common.curentOrder.getAddress());
+            txtUserPhone.setText(Common.curentOrder.getPhoneNumber());
+
+            DetailOrderAdapter adapter = new DetailOrderAdapter(getContext(),R.layout.product_item,Common.curentOrder.getDetail());
+            lsvDetail.setAdapter(adapter);
+        }
+
+        Button btnButton = root.findViewById(R.id.buttonViewMap);
+        btnButton.setOnClickListener(new Button.OnClickListener() {
             @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), MapActivity.class);
+                startActivity(intent);
             }
         });
         return root;
