@@ -11,6 +11,15 @@ public class Order {
     private String restaurant;
     private String restaurantName;
 
+    public String getShipper() {
+        return shipper;
+    }
+
+    public void setShipper(String shipper) {
+        this.shipper = shipper;
+    }
+
+    private String shipper;
     public String getRestaurantName() {
         return restaurantName;
     }

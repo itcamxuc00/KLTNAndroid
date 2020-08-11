@@ -11,7 +11,9 @@
     <string name="map_key" translatable="false">
         AIzaSyBhUQlVf9ontqEXNvV_xR0frsSvyYYEbfI
     </string>
-    <string name="menu_home">Home</string>
+    <string name="menu_home">Đơn hàng hiện tại</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
+
+    <string name="menu_history">Lịch sử đơn hàng</string>
 </resources>

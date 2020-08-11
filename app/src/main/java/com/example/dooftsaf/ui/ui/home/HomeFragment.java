@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 
@@ -33,7 +34,7 @@ public class HomeFragment extends Fragment {
         TextView txtUserPhone = root.findViewById(R.id.textViewCsPhone);
         TextView txtUserAddress = root.findViewById(R.id.textViewCsAdress);
         ListView lsvDetail = root.findViewById(R.id.lsvDetail);
-
+        ((AppCompatActivity) getActivity()).setTitle("Đơn hàng hiện tại");
         if(Common.curentOrder != null){
             txtId.setText(Common.curentOrder.getId());
             txtResAdress.setText(Common.curentOrder.getRestaurantAddress());

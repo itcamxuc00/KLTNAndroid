@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.example.dooftsaf.R;
 import com.example.dooftsaf.ui.model.Order;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class OrdersAdapter extends BaseAdapter {
@@ -53,8 +54,8 @@ public class OrdersAdapter extends BaseAdapter {
 
         Order order = orderList.get(i);
         txtId.setText(order.getId().substring(0,9));
-        String sDate = order.getDate().toString();
-        txtDate.setText(order.getDate().toString());
+        @SuppressLint("SimpleDateFormat") String sDate = new SimpleDateFormat("dd/MM/YYYY hh:mm:ss").format(order.getDate());
+        txtDate.setText(sDate);
         txtUsername.setText(order.getUsername());
         txtAddress.setText(order.getAddress());
         txtPhoneNumber.setText(order.getPhoneNumber());

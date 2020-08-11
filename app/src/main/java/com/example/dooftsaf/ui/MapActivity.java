@@ -40,6 +40,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
@@ -100,10 +102,25 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_CALL);
                 intent.setData(Uri.parse("tel:" + Common.curentOrder.getPhoneNumber()));
-                if (ActivityCompat.checkSelfPermission(MapActivity.this, android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    return;
+                if (ContextCompat.checkSelfPermission(MapActivity.this,
+                        Manifest.permission.CALL_PHONE)
+                        != PackageManager.PERMISSION_GRANTED) {
+
+                    ActivityCompat.requestPermissions(MapActivity.this,
+                            new String[]{Manifest.permission.CALL_PHONE},
+                            1);
+
+                    // MY_PERMISSIONS_REQUEST_CALL_PHONE is an
+                    // app-defined int constant. The callback method gets the
+                    // result of the request.
+                } else {
+                    //You already have permission
+                    try {
+                        startActivity(intent);
+                    } catch(SecurityException e) {
+                        e.printStackTrace();
+                    }
                 }
-                startActivity(intent);
             }
         });
 
@@ -175,9 +192,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
         // Show marker on the screen and adjust the zoom level
-        mMap.addMarker(new MarkerOptions().position(mOrigin).title("Origin"));
-        mMap.addMarker(new MarkerOptions().position(mDestination).title("Destination"));
+        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.shipper);
+        mMap.addMarker(new MarkerOptions().position(mOrigin).title("").icon(icon));
+        mMap.addMarker(new MarkerOptions().position(mDestination).title("0"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mOrigin,8f));
+        mMap.animateCamera( CameraUpdateFactory.zoomTo( 15.0f ));
         new TaskDirectionRequest().execute(buildRequestUrl(mOrigin,mDestination));
     }
 
@@ -196,7 +215,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         String param = strOrigin + "&" + strDestination + "&" + sensor + "&" + mode;
         String output = "json";
-        String APIKEY = getResources().getString(R.string.map_key);
+        String APIKEY = "AIzaSyDnbHQ_2Q9POiAFe6k6D0iW3XiNicNNvdE";
 
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + param + "&key="+APIKEY;
         Log.d("TAG", url);

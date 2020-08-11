@@ -94,6 +94,7 @@ public class MainService extends Service  {
                         }
                         for (QueryDocumentSnapshot doc : value) {
                             if (doc.getString("status").equals("Đang giao hàng")) {
+                                Log.d("ERRRRRRRRRRR",doc.getId());
                                 Common.curentOrder = doc.toObject(Order.class);
                                 Common.curentOrder.setId(doc.getId());
                                 mFirebaseFirestore.collection("restaurants").document(doc.getString("restaurant"))
