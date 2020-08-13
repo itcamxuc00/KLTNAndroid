@@ -34,6 +34,8 @@ public class HomeFragment extends Fragment {
         TextView txtUserPhone = root.findViewById(R.id.textViewCsPhone);
         TextView txtUserAddress = root.findViewById(R.id.textViewCsAdress);
         ListView lsvDetail = root.findViewById(R.id.lsvDetail);
+        TextView txtShippingFee = root.findViewById(R.id.textViewShippingFee);
+        TextView txtTotal = root.findViewById(R.id.textViewTotal);
         ((AppCompatActivity) getActivity()).setTitle("Đơn hàng hiện tại");
         if(Common.curentOrder != null){
             txtId.setText(Common.curentOrder.getId());
@@ -42,7 +44,8 @@ public class HomeFragment extends Fragment {
             txtUsername.setText(Common.curentOrder.getUsername());
             txtUserAddress.setText(Common.curentOrder.getAddress());
             txtUserPhone.setText(Common.curentOrder.getPhoneNumber());
-
+            txtShippingFee.setText(""+Common.curentOrder.getShippingFee());
+            txtTotal.setText(""+Common.curentOrder.getTotalPrice());
             DetailOrderAdapter adapter = new DetailOrderAdapter(getContext(),R.layout.product_item,Common.curentOrder.getDetail());
             lsvDetail.setAdapter(adapter);
         }

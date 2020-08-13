@@ -10,6 +10,24 @@ public class Order {
     private String phoneNumber;
     private String restaurant;
     private String restaurantName;
+    private int shippingFee;
+    private String user;
+
+    public int getShippingFee() {
+        return shippingFee;
+    }
+
+    public void setShippingFee(int shippingFee) {
+        this.shippingFee = shippingFee;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
 
     public String getShipper() {
         return shipper;

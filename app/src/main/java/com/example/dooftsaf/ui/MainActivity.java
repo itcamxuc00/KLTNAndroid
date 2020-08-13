@@ -66,7 +66,10 @@ public class MainActivity extends AppCompatActivity  {
                         fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, new SlideshowFragment()).commit();
                         break;
                     case R.id.nav_logout:
-                        Log.d("aaa","bbbbb");
+                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                        break;
                 }
                 drawer.closeDrawer(GravityCompat.START);
                 return true;

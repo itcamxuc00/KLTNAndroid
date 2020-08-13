@@ -7,13 +7,17 @@
     tools:context=".ui.MapActivity" >
 
     <fragment
-        android:layout_width="match_parent"
-        android:layout_height="600dp"
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
-        tools:context=".MapsActivity"
-        android:layout_margin="8dp"
-        android:layout_weight="2"/>
+        android:layout_width="match_parent"
+        android:layout_height="600dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_weight="2"
+        tools:context=".MapsActivity" />
 
     <LinearLayout
         android:layout_alignParentBottom="true"
@@ -36,19 +40,17 @@
             app:cornerRadius="2dp"
             />
 
-
-        <Button
-            android:id="@+id/btn_shipped"
-            android:text="Đã giao hàng"
-            android:background="@drawable/bg_conner"
-            android:textColor="@android:color/white"
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="81dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_margin="8dp"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            app:cornerRadius="2dp"
-            />
+            android:visibility="visible" />
     </LinearLayout>
+
 </RelativeLayout>

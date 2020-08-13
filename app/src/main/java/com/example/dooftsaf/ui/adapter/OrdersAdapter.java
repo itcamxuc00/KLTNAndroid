@@ -50,6 +50,7 @@ public class OrdersAdapter extends BaseAdapter {
         TextView txtAddress = view.findViewById(R.id.textViewAdress);
         TextView txtPhoneNumber = view.findViewById(R.id.textViewPhoneNumber);
         TextView txtPrice = view.findViewById(R.id.textViewPrice);
+        TextView txtShipingFee = view.findViewById(R.id.txtShippingFee);
         TextView txtStatus = view.findViewById(R.id.textViewStatus);
 
         Order order = orderList.get(i);
@@ -60,6 +61,7 @@ public class OrdersAdapter extends BaseAdapter {
         txtAddress.setText(order.getAddress());
         txtPhoneNumber.setText(order.getPhoneNumber());
         txtPrice.setText("" + order.getTotalPrice());
+        txtShipingFee.setText("" + order.getShippingFee());
         txtStatus.setText(order.getStatus());
 
         return view;

@@ -24,7 +24,10 @@ import android.os.Looper;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 
@@ -76,8 +79,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private LatLng mOrigin;
     private LatLng mDestination;
-    Button btn_call, btn_shipped;
+    Button btn_call;
 
+    String arr[]={
+            "Đang giao hàng",
+            "Hết hàng",
+            "Khách không nhận",
+            "Đã giao hàng"};
     private final static int MY_PERMISSIONS_REQUEST = 32;
 
     @Override
@@ -86,7 +94,20 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         setContentView(R.layout.activity_map);
 
         btn_call = findViewById(R.id.btn_call);
-        btn_shipped = findViewById(R.id.btn_shipped);
+        final Spinner spin=(Spinner) findViewById(R.id.spinner);
+        //Gán Data source (arr) vào Adapter
+        ArrayAdapter<String> adapter=new ArrayAdapter<String>
+                (
+                        this,
+                        android.R.layout.simple_spinner_item,
+                        arr
+                );
+        //phải gọi lệnh này để hiển thị danh sách cho Spinner
+        adapter.setDropDownViewResource
+                (android.R.layout.simple_list_item_single_choice);
+        //Thiết lập adapter cho Spinner
+        spin.setAdapter(adapter);
+        spin.setOnItemSelectedListener(new MyProcessEvent());
 
         mOrigin = new LatLng(Common.mLocation.getLatitude(),Common.mLocation.getLongitude());
         mDestination = new LatLng(Common.curentOrder.getLocation().getLat(), Common.curentOrder.getLocation().getLng());
@@ -124,21 +145,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             }
         });
 
-        btn_shipped.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //We will delete order in table
-                // -OrderNeedShip
-                // -ShippingOrder
-                //And update status of order to Shipped
-                shippedOrder();
-            }
-        });
 
     }
 
-    private void shippedOrder() {
-        Common.curentOrder.setStatus("Đã giao hàng");
+    private void shippedOrder(String status) {
+        Common.curentOrder.setStatus(status);
         Common.currentUser.setActivity("free");
         mFirebaseFirestore.collection("orders").document(Common.curentOrder.getId()).set(Common.curentOrder)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -349,4 +360,22 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                     MY_PERMISSIONS_REQUEST);
         }
     }
+
+    private class MyProcessEvent implements
+            AdapterView.OnItemSelectedListener
+    {
+        //Khi có chọn lựa thì vào hàm này
+        public void onItemSelected(AdapterView<?> arg0,
+                                   View arg1,
+                                   int arg2,
+                                   long arg3) {
+            //arg2 là phần tử được chọn trong data source
+            if(arg2!=0) shippedOrder(arr[arg2]);
+        }
+        //Nếu không chọn gì cả
+        public void onNothingSelected(AdapterView<?> arg0) {
+
+        }
+    }
 }
+
